@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <mutex>
 
 using namespace std;
 
@@ -20,19 +21,18 @@ int main() {
     vector<int> primes;
     int start = 0;
     int stop = 10;
-    int nrOfThreads = 3;
+    int nrOfThreads = 4;
 
     threads.reserve(nrOfThreads);
 for (int i = 0; i < nrOfThreads; ++i) {
         threads.emplace_back([&start, &stop, &primes] {
             int j = start;
             while (j < stop) {
-                if (CheckPrime::checkPrime(j)) primes.push_back(j);
-                ++j;
+                if (CheckPrime::checkPrime(j)) primes.push_back(j); //Problemer med at flere leser samme tall.
+                ++j;                                                   //Må finne ut hvor jeg skal bruke lås.
             }
         });
     }
-
 
     for (auto const &value: primes) cout << value << endl;
     for (auto &thread: threads) thread.join();
