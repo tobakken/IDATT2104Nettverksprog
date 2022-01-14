@@ -19,23 +19,27 @@ class CheckPrime {
 int main() {
     vector<thread> threads;
     vector<int> primes;
-    int start = 0;
-    int stop = 10;
+    int counter = 0;
+    mutex counter_mutex;
+    int stop = 100;
     int nrOfThreads = 4;
 
     threads.reserve(nrOfThreads);
 for (int i = 0; i < nrOfThreads; ++i) {
-        threads.emplace_back([&start, &stop, &primes] {
-            int j = start;
-            while (j < stop) {
-                if (CheckPrime::checkPrime(j)) primes.push_back(j); //Problemer med at flere leser samme tall.
-                ++j;                                                   //Må finne ut hvor jeg skal bruke lås.
+        threads.emplace_back([&counter, &counter_mutex, &stop, &primes] {
+            while (counter < stop) {
+                counter_mutex.lock();
+                if (CheckPrime::checkPrime(counter)) {
+                    primes.push_back(counter);
+                }
+                ++counter;
+                counter_mutex.unlock();
             }
         });
     }
 
-    for (auto const &value: primes) cout << value << endl;
-    for (auto &thread: threads) thread.join();
+    for (auto const &value: primes) {cout << value << endl;}
+    for (auto &thread: threads) {thread.join();}
     cout << "Hello, World!" << endl;
     return 0;
 }
