@@ -1,14 +1,15 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-#include <mutex>
+#include <bits/stdc++.h>
 #include <chrono>
 
 using namespace std;
 using namespace chrono;
 
 class CheckPrime {
-    public:
+
+public:
         static bool checkPrime(int nr) {
             if (nr < 2) return false;
             for (int i = 2; i < nr; ++i) {
@@ -22,21 +23,23 @@ int main() {
     auto startTime = high_resolution_clock::now();
     vector<thread> threads;
     vector<int> primes;
-    int counter = 0;
-    mutex counter_mutex;
-    int stop = 10000;
+    int start = 0;
+    int stop = 100;
     int nrOfThreads = 5;
+    int nrPrThread = (stop - start) / nrOfThreads;
 
     threads.reserve(nrOfThreads);
 for (int i = 0; i < nrOfThreads; ++i) {
-        threads.emplace_back([i, &counter, &counter_mutex, &stop, &primes] {
-            while (counter < stop) {
-                counter_mutex.lock();
-                if (CheckPrime::checkPrime(counter)) {
-                    primes.push_back(counter);
+    int nrToCheck = start + (nrPrThread * i);
+    stop = (nrPrThread + start)*(i+1);
+        threads.emplace_back([nrToCheck, stop, &primes] {
+            int check = nrToCheck;
+            int stopCheck = stop;
+            while (check < (stopCheck)) {
+                if (CheckPrime::checkPrime(check)) {
+                    primes.push_back(check);
                 }
-                ++counter;
-                counter_mutex.unlock();
+                ++check;
             }
         });
     }
@@ -45,6 +48,7 @@ for (int i = 0; i < nrOfThreads; ++i) {
 
     cout << "Execution time: " << duration_cast<microseconds>(high_resolution_clock::now() - startTime).count() << endl;
     cout << "Hello, World!" << endl;
+    sort(primes.begin(), primes.end());
     for (auto const &value: primes) {cout << value << " ";}
     return 0;
 }
