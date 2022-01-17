@@ -24,8 +24,8 @@ int main() {
     vector<thread> threads;
     vector<int> primes;
     int start = 0;
-    int stop = 1500;
-    int nrOfThreads = 2;
+    int stop = 1000;
+    int nrOfThreads = 5;
     int nrPrThread = (stop - start) / nrOfThreads;
 
     threads.reserve(nrOfThreads);
