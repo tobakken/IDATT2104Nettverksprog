@@ -3,6 +3,7 @@
 #include <vector>
 #include <bits/stdc++.h>
 #include <chrono>
+#include <mutex>
 
 using namespace std;
 using namespace chrono;
@@ -23,8 +24,9 @@ int main() {
     auto startTime = high_resolution_clock::now();
     vector<thread> threads;
     vector<int> primes;
+    mutex prime_mutex;
     int start = 0;
-    int stop = 1000;
+    int stop = 10000;
     int nrOfThreads = 5;
     int nrPrThread = (stop - start) / nrOfThreads;
 
@@ -32,12 +34,14 @@ int main() {
     for (int i = 0; i < nrOfThreads; ++i) {
         int nrToCheck = start + (nrPrThread * i);
         int stopVal = min(stop, (nrPrThread*(i+1) + start));
-        threads.emplace_back([nrToCheck, stopVal, &primes] {
+        threads.emplace_back([nrToCheck, stopVal, &primes, &prime_mutex] {
             int check = nrToCheck;
             int stopCheck = stopVal;
             while (check < (stopCheck)) {
                 if (CheckPrime::checkPrime(check)) {
+                    prime_mutex.lock();
                     primes.push_back(check);
+                    prime_mutex.unlock();
                 }
                 ++check;
             }
