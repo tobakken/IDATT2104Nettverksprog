@@ -26,22 +26,21 @@ int main() {
     vector<int> primes;
     mutex prime_mutex;
     int start = 0;
-    int stop = 10000;
-    int nrOfThreads = 5;
+    int stop = 101;
+    int nrOfThreads = 10;
     int nrPrThread = (stop - start) / nrOfThreads;
 
     threads.reserve(nrOfThreads);
     for (int i = 0; i < nrOfThreads; ++i) {
         int nrToCheck = start + (nrPrThread * i);
-        int stopVal = min(stop, (nrPrThread*(i+1) + start));
+        int stopVal = (i == nrOfThreads - 1) ? stop + 1 : min(stop, (nrPrThread*(i+1) + start));
+
         threads.emplace_back([nrToCheck, stopVal, &primes, &prime_mutex] {
             int check = nrToCheck;
-            int stopCheck = stopVal;
-            while (check < (stopCheck)) {
+            while (check < (stopVal)) {
                 if (CheckPrime::checkPrime(check)) {
-                    prime_mutex.lock();
+                    unique_lock<mutex> lock(prime_mutex);
                     primes.push_back(check);
-                    prime_mutex.unlock();
                 }
                 ++check;
             }
