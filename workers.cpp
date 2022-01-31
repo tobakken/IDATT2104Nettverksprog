@@ -19,20 +19,24 @@ public:
     list<function<void()>> tasks;
     mutex task_mutex;
     condition_variable cv;
+    bool thread_run;
 
     Workers(int nr) {
         nrOfThreads = nr;
     }
 
     void start() {
+        thread_run = true;
         for (int i = 0; i < nrOfThreads; ++i) {
             worker_threads.emplace_back([this] {
-                while (true){
+                while (thread_run){
                     function<void()> task;
-                    if (!tasks.empty()) {
-
-                        task = *tasks.begin();
-                        tasks.pop_front();
+                    {
+                        unique_lock<mutex> lock(task_mutex);
+                        if (!tasks.empty()) {
+                            task = *tasks.begin();
+                            tasks.pop_front();
+                        }
                     }
                     task();
                 }
@@ -45,6 +49,7 @@ public:
     }
 
     void join() {
+        if (tasks.empty()) thread_run = false;
         for (auto &thread: worker_threads) thread.join();
     }
 };
