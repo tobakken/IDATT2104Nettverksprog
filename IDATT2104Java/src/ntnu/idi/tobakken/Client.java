@@ -2,6 +2,7 @@ package ntnu.idi.tobakken;
 
 import java.io.*;
 import java.net.*;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Client {
@@ -10,12 +11,12 @@ public class Client {
 
         /* Bruker en scanner til å lese fra kommandovinduet */
         Scanner leserFraKommandovindu = new Scanner(System.in);
-        System.out.print("Oppgi navnet på maskinen der tjenerprogrammet kjører: ");
+        System.out.print("State name of machine: ");
         String tjenermaskin = leserFraKommandovindu.nextLine();
 
         /* Setter opp forbindelsen til tjenerprogrammet */
         Socket forbindelse = new Socket(tjenermaskin, PORTNR);
-        System.out.println("Nå er forbindelsen opprettet.");
+        System.out.println("Connected.");
 
         /* Åpner en forbindelse for kommunikasjon med tjenerprogrammet */
         InputStreamReader leseforbindelse
@@ -32,8 +33,8 @@ public class Client {
         String enLinje = leserFraKommandovindu.nextLine();
         while (!enLinje.equals("")) {
             skriveren.println(enLinje);  // sender teksten til tjeneren
-            String respons = leseren.readLine();  // mottar respons fra tjeneren
-            System.out.println("Fra tjenerprogrammet: " + respons);
+            String respons = leseren.readLine();// mottar respons fra tjeneren
+            System.out.println(respons);
             enLinje = leserFraKommandovindu.nextLine();
         }
 
