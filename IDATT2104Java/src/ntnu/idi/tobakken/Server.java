@@ -10,7 +10,7 @@ public class Server {
         final int PORTNR = 1250;
 
         ServerSocket tjener = new ServerSocket(PORTNR);
-        System.out.println("Logg for the server. Now we wait...");
+        System.out.println("Log for the server. Now we wait...");
         Socket forbindelse = tjener.accept();  // venter inntil noen tar kontakt
 
         /* Åpner strømmer for kommunikasjon med klientprogrammet */
@@ -27,28 +27,31 @@ public class Server {
         int y = 0;
 
         while (enLinje != null) {  // forbindelsen på klientsiden er lukket
-            skriveren.println("Type your first number: ");
+            skriveren.println("Type your first number:");
             enLinje = leseren.readLine();  // mottar en linje med tekst
             x = Integer.parseInt(enLinje);
-            skriveren.println("Type your second number: ");
+
+            skriveren.println("Type your second number:");
             enLinje = leseren.readLine();
             y = Integer.parseInt(enLinje);
 
             skriveren.println("What do you want (choose 1 or 2 and press enter)" +
                     " (1) Addition" +
-                    " (2) Subtraction");
-
+                    "  (2) Subtraction");
             valgLinje = leseren.readLine();
 
             if (valgLinje.equals("1")){
-                skriveren.println("Result of addition: " + add(x, y) + " type 'yes' to go again");  // sender svar til klienten
+                skriveren.println("Result of addition: " + add(x, y) );  // sender svar til klienten
             } else if (valgLinje.equals("2")){
-                skriveren.println("result of subtraction: " + subtract(x, y) + " type 'yes' to go again");
+                skriveren.println("result of subtraction: " + subtract(x, y) );
             } else {
-                skriveren.println("Something went wrong, feel free to try again (type 'yes' to go again:");
+                skriveren.println("Something went wrong, feel free to try again");
             }
 
-            enLinje = leseren.readLine().toLowerCase(Locale.ROOT);
+            skriveren.println("Type 'yes' to go again");
+
+            enLinje = leseren.readLine();
+            System.out.println(enLinje);
             if (!enLinje.equals("yes")) enLinje = null;
         }
 
