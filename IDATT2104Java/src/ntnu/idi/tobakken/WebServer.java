@@ -16,11 +16,13 @@ public class WebServer {
 
         PrintWriter pw = new PrintWriter(connection.getOutputStream(), true);
 
+        //Skulle hatt med loop som lagret headeren fra browseren og vist den som html
+
         String msg = "HTTP/1.0 200 OK \n" +
                 "Content-Type: text/html; charset=utf-8 \n" +
                 "\n\n" +
                 "<html> <body>" +
-                "<h1> Hilsen. Du har koblet deg opp til min enkle web-tjener</h1>" +
+                "<h1> Yo dawg! Du har koblet deg opp til min enkle web-tjener</h1>" +
                 "<p>Header fra Klient er: </p>" +
                 "<ul>" +
                 "<li>HTTP/1.0 200 OK </li>" +
