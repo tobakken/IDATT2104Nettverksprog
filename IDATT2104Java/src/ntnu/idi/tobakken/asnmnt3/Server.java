@@ -1,9 +1,7 @@
-package ntnu.idi.tobakken;
+package ntnu.idi.tobakken.asnmnt3;
 
 import java.io.*;
 import java.net.*;
-import java.util.Locale;
-import java.util.Objects;
 
 public class Server{
 
