@@ -1,4 +1,4 @@
-package ntnu.idi.tobakken.asnmnt4;
+package ntnu.idi.tobakken.asnmnt4.udp;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

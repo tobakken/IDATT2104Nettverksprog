@@ -1,12 +1,9 @@
-package ntnu.idi.tobakken.asnmnt4;
+package ntnu.idi.tobakken.asnmnt4.udp;
 
-import javax.sound.sampled.Port;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class ServerUDP {
     public static void main(String[] args) throws IOException {
