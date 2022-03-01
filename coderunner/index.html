@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>C++ coderunner</title>
+</head>
+<body>
+<div>
+<textarea id="codearea">
+</textarea>
+    <button onclick="runCode()">Run</button>
+</div>
+
+<div id="output"></div>
+</body>
+<script>
+function runCode(){
+    const code = document.getElementById("codearea").value;
+    console.log(code);
+    fetch("http://localhost:8080/run", {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(code)
+        })
+        .then(response => response.text())
+        .then(text => console.log(text));
+
+}
+</script>
+</html>
