@@ -26,7 +26,7 @@ function runCode(){
         body: JSON.stringify(code)
         })
         .then(response => response.text())
-        .then(text => console.log(text));
+        .then(text => document.getElementById("output").innerHTML = text);
 
 }
 </script>
