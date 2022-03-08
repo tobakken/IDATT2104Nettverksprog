@@ -1,6 +1,8 @@
 package ntnu.stud.tobakken.coderunner.web;
 
 import ntnu.stud.tobakken.coderunner.service.FileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +12,8 @@ import java.util.Map;
 @RestController
 @CrossOrigin
 public class CoderunnerController {
+
+    Logger LOG = LoggerFactory.getLogger(getClass());
 
     @PostMapping("/run")
     public String run(@RequestBody Map<String, String> code) throws IOException {
@@ -21,6 +25,7 @@ public class CoderunnerController {
             e.printStackTrace();
         }
         File codeFile = new File("src/main/java/ntnu/stud/tobakken/coderunner/docker/cppCode/temp.cpp");
+        LOG.info("Attempting to write to file");
         fileHandler.writeToFile(codeFile, code.get("code"));
 
 
@@ -31,6 +36,7 @@ public class CoderunnerController {
 
         Runtime.getRuntime().exec("docker rmi coderunner");
         Process p = Runtime.getRuntime().exec("docker build C:\\Users\\toroy\\Documents\\NTNU\\Nettverksprog\\NettverksprogKode\\IDATT2104Nettverksprog\\coderunner\\src\\main\\java\\ntnu\\stud\\tobakken\\coderunner\\docker\\ -t coderunner");
+        LOG.info("Building docker image");
         BufferedReader buildInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
         BufferedReader buildError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
@@ -39,6 +45,7 @@ public class CoderunnerController {
             System.out.println(b);
         }
 
+        //Could add this error to the output-error to give better response to the user.
         while ((b = buildError.readLine()) != null) {
             System.out.println(b);
         }
@@ -77,6 +84,7 @@ public class CoderunnerController {
         String outputErrorString = outputError.toString();
 
         if (outputErrorString.length() != 0) return outputErrorString;
+        LOG.info("Code compiled and ran successful");
         return outputString;
     }
 
