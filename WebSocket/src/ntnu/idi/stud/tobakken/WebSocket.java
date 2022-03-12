@@ -28,17 +28,18 @@ public class WebSocket {
             String data = scanner.useDelimiter("\\r\\n\\r\\n").next();
             System.out.println(data);
             String test = data.substring(data.lastIndexOf("Sec-WebSocket-Key: "), data.length());
-            System.out.println(test);
+            // System.out.println(test);
             Matcher get = Pattern.compile("^GET").matcher(data);
 
             if (get.find()) {
                 Matcher match = Pattern.compile("Sec-WebSocket-Key: (.*)").matcher(data);
                 match.find();
-                byte[] response = ("\"HTTP/1.1 101 Switching Protocols\\r\\n\"\n" +
-                        "    + \"Connection: Upgrade\\r\\n\"\n" +
-                        "    + \"Upgrade: websocket\\r\\n\"\n" +
-                        "    + \"Sec-WebSocket-Accept: " +
-                        "    + " + Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest(((match.group(1) + "258EAFA5-E914-47DA-95CA-C5AB0DC85B1").getBytes(StandardCharsets.UTF_8))))
+                //System.out.println(match.group(1));
+                byte[] response = ("HTTP/1.1 101 Switching Protocols\\r\\n" +
+                        "Connection: Upgrade\\r\\n\"\n" +
+                        "Upgrade: websocket\\r\\n\"\n" +
+                        "Sec-WebSocket-Accept: " +
+                        Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest((match.group(1).getBytes(StandardCharsets.UTF_8) + "258EAFA5-E914-47DA-95CA-C5AB0DC85B1").getBytes(StandardCharsets.UTF_8)))
                         + "\\r\\n\\r\\n").getBytes(StandardCharsets.UTF_8);
                 System.out.println(response);
                 out.write(response, 0, response.length);
